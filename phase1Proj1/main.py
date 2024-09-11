@@ -34,8 +34,9 @@ class UserInputsToCsv:
     def exportDataFrame(self):
         fileName = f"{self.lastName}{self.firstName}.csv"
         self.dataFrame.to_csv(fileName,index=False,header=False)
+        print("-------------------------------------------------------------------------------------------------------------------------------\n")
         print(f"CSV created with {self.lastName,self.firstName} and is in the directory of the program.\n It is called {fileName} and is located at {os.getcwd()}. \n Thank you for using our csv setup tool :)")
-                    
+        print("\n-------------------------------------------------------------------------------------------------------------------------------" )          
         
         
 if __name__ =="__main__":

@@ -28,7 +28,7 @@ class UserInputsToCsv:
         pass
     
     def createDataFrame(self):
-        placement = [[self.lastName, self.firstName, self.classId]]
+        placement = [self.lastName, self.firstName], [self.classId]
         self.dataFrame = pd.DataFrame(placement)
         
     def exportDataFrame(self):

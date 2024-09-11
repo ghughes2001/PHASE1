@@ -1,0 +1,13 @@
+Zach - c++/javascript
+Grant - java, c++, c, python
+Rohan - 
+
+Would like to use Python for our project. (pandas DataFrame, iloc, loc)
+
+Phase I lead: 
+proj1: Rohan Keenoy
+
+Personal Tasks:
+Jira Trello
+Set up some tickets
+write code

@@ -127,8 +127,32 @@ class openAppend:
 
                 
     def addNote(self):
-        self.notes = input ("\nEnter a note, no checking yet: ")
-        
+        isEntered = False
+        if self.activityCode == "D":
+            while isEntered == False:
+                self.notes = input("\nYou entered other as an activity, please enter a note less than 80 chars\n")
+                #cannot be an empty null string and must be less than 80 chars
+                if len(self.notes) < 80 and len(self.notes) != 0:
+                    if "," not in self.notes:
+                        isEntered = True
+                        print(f"Note input{self.notes} accepted.")
+                    else:
+                        print("!!!!-----Comma found in notes, please try again!")
+                else:
+                    print("!!!!-----Notes bound exceeded > 80 or entered a null string.. Please enter a valid note.  User must enter a note for an other activity selection.")
+        else:
+            while isEntered == False:
+                self.notes = input("User selected something different than other.\n This means it is optional to include a notes portion\nPlease Enter a note less than 80 chars or just click enter.")
+                if len(self.notes) < 80:
+                    if "," not in self.notes:
+                        isEntered = True
+                        print(f"Note input{self.notes} accepted.")
+                    else:
+                        print("!!!!-----Comma in notes, please try again!")
+                else:
+                    print("!!!!-----Len is over 80 chars, please try again!")
+                    
+                    
     def addStartTime(self):
         self.startTime = input("\nadd a start time, not checked yet")
     def addEndTime(self):
@@ -137,11 +161,18 @@ class openAppend:
     def addHowMany(self):
         isEntered = False
         while(isEntered == False):
-            print("------------------------")
+            print("------------------------------------------------")
             self.pplInvolved = input("\n How many people were involved in the activity? Select a positive integer <= 50: \n")
-            print("------------------------")
-            if int(self.pplInvolved) <= 50:
-                isEntered = True
+            try:
+                num = int(self.pplInvolved)
+                if 0 < num <= 50:
+                    self.pplInvolved = num
+                    isEntered = True
+                    print(f"\nYou entered: {self.pplInvolved} for people involved\n")
+                else:
+                    print("The number must be between 1 and 50. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter a positive integer.")
         
         
     def appendToDf(self):

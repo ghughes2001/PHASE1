@@ -18,15 +18,23 @@ class openAppend:
         
         
     def getDataFrame(self):
-        validFile = False
-        while (validFile == False):
-            self.fileName = input("------Please enter the name of the file--------")
-            if os.path.exists(self.fileName):
-                print("File found, loading")
-                validFile = True
-            else:
-                print("File name does not exist please enter a file name")
-        self.df = pd.read_csv(self.fileName, header=None)
+        validFile = []
+        count=0
+        for file in os.listdir():
+            if "Log.csv" in file:
+                count +=1
+                validFile.append(file)
+        if count > 1:
+            print("several files contain Log.csv, exiting.....")
+            exit
+        elif count <1 :
+            print("No file containing Log.csv found, exiting......")
+            exit
+        else:
+            print("Loading CSV.....")
+            self.fileName = validFile[0]
+            
+            self.df = pd.read_csv(self.fileName, header=None)
     #this function is the data check he talks about, dataframe will return NaN if an elelemnt does not exist, so we check wtih that   
     def dataCheck(self):
         #edge case, checking shape

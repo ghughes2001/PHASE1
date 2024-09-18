@@ -57,8 +57,75 @@ class openAppend:
     
     def addDate(self):
         self.date = input("\n Enter a Date, no checking yet:")
+    def display(self):
+        print("--------------ACTIVITY CODE--------------")
+        print("0 --> Reading Canvas site or textbook\n")
+        print("1 --> Studying using a practice quiz\n")
+        print("2 --> Taking a scoring quiz\n")
+        print("3 --> Participating in a Canvas discussion\n")
+        print("4 --> Meeting with your team\n")
+        print("5 --> Working on documentation\n")
+        print("6 --> Working on designs\n")
+        print("7 --> Programming\n")
+        print("8 --> Working on a test plan or doing testing\n")
+        print("9 --> Studying for the final exam\n")
+        print("A --> Conferring with the instructor\n")
+        print("B --> Working on a mini-lecture video or reading\n")
+        print("C --> Viewing a video or website that is not a mini-lecture\n")
+        print("D --> Other If you are doing something that does not fit any of the other categories (explain in notes)\n")
+        
     def addActivityCode(self):
-        self.activityCode = input("\nEnter an acitvity Code, no checking yet")
+        isEntered = False
+        while not isEntered:
+            self.display()
+            self.activityCode = input("\n--------------------Enter an activity code for what you're working on--------------------\n")
+            match self.activityCode:
+                case "0":
+                    print("Selected 0: Reading Canvas site or textbook")
+                    isEntered = True
+                case "1":
+                    print("Selected 1: Studying using a practice quiz")
+                    isEntered = True
+                case "2":
+                    print("Selected 2: Taking a scoring quiz")
+                    isEntered = True
+                case "3":
+                    print("Syelected 3: Participating in a Canvas discussion")
+                    isEntered = True
+                case "4":
+                    print("Selected 4: Meeting with your team")
+                    isEntered = True
+                case "5":
+                    print("Selected 5: Working on documentation")
+                    isEntered = True
+                case "6":
+                    print("Syelected 6: Working on designs")
+                    isEntered = True
+                case "7":
+                    print("Selected 7: Programming")
+                    isEntered = True
+                case "8":
+                    print("Selected 8: Working on a test plan or doing testing")
+                    isEntered = True
+                case "9":
+                    print("Selected 9: Studying for the final exam")
+                    isEntered = True
+                case "A":
+                    print("Selected A: Conferring with the instructor")
+                    isEntered = True
+                case "B":
+                    print("Selected B: Working on a mini-lecture video or reading")
+                    isEntered = True
+                case "C":
+                    print("Selected C: Viewing a video or website that is not a mini-lecture")
+                    isEntered = True
+                case "D":
+                    print("Selected D: Other (explain in notes)")
+                    isEntered = True
+                case _:
+                    print("!!!!-----Please enter a valid code.-----!!!!")
+
+                
     def addNote(self):
         self.notes = input ("\nEnter a note, no checking yet: ")
         
@@ -68,7 +135,13 @@ class openAppend:
         self.endTime = input("\nadd an end time, not checked yet")
     
     def addHowMany(self):
-        self.pplInvolved = input("\n How many people? not checked yet")
+        isEntered = False
+        while(isEntered == False):
+            print("------------------------")
+            self.pplInvolved = input("\n How many people were involved in the activity? Select a positive integer <= 50: \n")
+            print("------------------------")
+            if int(self.pplInvolved) <= 50:
+                isEntered = True
         
         
     def appendToDf(self):

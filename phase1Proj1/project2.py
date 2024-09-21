@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import re
 class openAppend:
     informMessage = "salkdfjkaldskfj;laksdjflk;asdjf;lkasjdf;lkajsdfl;kjdsfal;kasdjf;lkajsdfl;kj"
     def __init__(self):
@@ -19,9 +20,10 @@ class openAppend:
         
     def getDataFrame(self):
         validFile = []
+        regPat = r'^[A-Z][a-z]+[A-Z][a-z]+Log\.csv$'
         count=0
         for file in os.listdir():
-            if "Log.csv" in file:
+            if re.match(regPat,file):
                 count +=1
                 validFile.append(file)
         if count > 1:
@@ -64,7 +66,8 @@ class openAppend:
         print(f"Starting inputs on row\n{self.startingRow}")
     
     def addDate(self):
-        self.date = input("\n Enter a Date, no checking yet:")
+        #self.date = input("\n Enter a Date, no checking yet:")
+        self.data = ""
     def display(self):
         print("--------------ACTIVITY CODE--------------")
         print("0 --> Reading Canvas site or textbook\n")

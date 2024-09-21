@@ -4,6 +4,7 @@
     HOW TO RUN: Navigate to where the python project and execute as python {projectname}.py, because python is an interpreted language, an external library is used to "compile" it for an executable.
     Testing was ran with the python command.
     AUTHORS: Rohan Keenoy 
+    DATE: 9/21/2024
     DATA STRUCTURES: A pandas dataframe is commonly used in scientific applications, it can be thought of as a N-d array,can have headers, and is structured as the csv is structured. 
     For this project using a dataframe is a no brainer. R has a similar structure. 
     A dictionary is used to append to rows in a dataframe. This generated per row-entry. 
@@ -79,12 +80,15 @@ class openAppend:
         #edge case, checking shape
         if self.df.shape[0] < 2 or self.df.shape[1] < 2:
             print( "Wrong shape")
+            exit()
         #seeing if first 2 cols are populated
         elif pd.isna(self.df.iloc[0,0]) or pd.isna(self.df.iloc[0,1]):
             print("First Row NaNs, incorrect format")
+            exit()
         #checking if second row, first col is populated
         elif pd.isna(self.df.iloc[1,0]):
             print("Class contains NaN, class DNE")
+            exit()
         else:
             self.lastName = self.df.iloc[0, 0]
             self.firstName = self.df.iloc[0,1]
@@ -141,7 +145,7 @@ class openAppend:
                     print("Selected 2: Taking a scoring quiz")
                     isEntered = True
                 case "3":
-                    print("Syelected 3: Participating in a Canvas discussion")
+                    print("Selected 3: Participating in a Canvas discussion")
                     isEntered = True
                 case "4":
                     print("Selected 4: Meeting with your team")

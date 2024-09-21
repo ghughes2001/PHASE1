@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import re
-import datetime
+from datetime import datetime
 class openAppend:
     informMessage = "salkdfjkaldskfj;laksdjflk;asdjf;lkasjdf;lkajsdfl;kjdsfal;kasdjf;lkajsdfl;kj"
     def __init__(self):
@@ -164,10 +164,14 @@ class openAppend:
                 else:
                     print("!!!!-----Len is over 80 chars, please try again!")
                     
-                    
+    
+    def fixTimesUp(time):
+        return time.strftime("%H:%M")
+       
     def addTime(self):
         hasUserFinished = False
-        startingTime = datetime.time.now()
+        startingTime = datetime.now().time()
+        startingTime = openAppend.fixTimesUp(startingTime)
         while(hasUserFinished==False):
             userInput = input(f"\n-----------------------------------------------\nCurrent start time for log is {startingTime}\n Please press enter to finish activity.")
             nextUserInput = input(f"Are you finished logging for activity that started at {startingTime} If yes please select: Y,y,Yes,yes. If no please select N,n,No,no")
@@ -175,14 +179,16 @@ class openAppend:
                 print(f"Yes was selected to finish activity that started at {startingTime}")
                 self.startTime= startingTime
                 self.addEndTime()        
+                hasUserFinished = True
             elif nextUserInput == "No" or nextUserInput == "N" or nextUserInput =="n" or nextUserInput == "no":
                 print(f"No was selected to finish activity that started at {startingTime}.") 
             else:
                 print("User input is unrecognized.")
             
     def addEndTime(self):
-        self.endTime = datetime.time.now()
-        print("\n -----------------------------------------------\n End time successfully logged as {self.endTime}")
+        self.endTime = datetime.now().time()
+        self.endTime = startingTime = openAppend.fixTimesUp(self.endTime)
+        print(f"\n -----------------------------------------------\n End time successfully logged as {self.endTime}")
        
     def midnightCheck(self):
         pass 

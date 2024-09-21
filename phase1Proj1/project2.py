@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import re
+import datetime
 class openAppend:
     informMessage = "salkdfjkaldskfj;laksdjflk;asdjf;lkasjdf;lkajsdfl;kjdsfal;kasdjf;lkajsdfl;kj"
     def __init__(self):
@@ -164,10 +165,27 @@ class openAppend:
                     print("!!!!-----Len is over 80 chars, please try again!")
                     
                     
-    def addStartTime(self):
-        self.startTime = input("\nadd a start time, not checked yet")
+    def addTime(self):
+        hasUserFinished = False
+        startingTime = datetime.time.now()
+        while(hasUserFinished==False):
+            userInput = input(f"\n-----------------------------------------------\nCurrent start time for log is {startingTime}\n Please press enter to finish activity.")
+            nextUserInput = input(f"Are you finished logging for activity that started at {startingTime} If yes please select: Y,y,Yes,yes. If no please select N,n,No,no")
+            if nextUserInput == "Yes" or nextUserInput == "Y" or nextUserInput =="y" or nextUserInput == "yes":
+                print(f"Yes was selected to finish activity that started at {startingTime}")
+                self.startTime= startingTime
+                self.addEndTime()        
+            elif nextUserInput == "No" or nextUserInput == "N" or nextUserInput =="n" or nextUserInput == "no":
+                print(f"No was selected to finish activity that started at {startingTime}.") 
+            else:
+                print("User input is unrecognized.")
+            
     def addEndTime(self):
-        self.endTime = input("\nadd an end time, not checked yet")
+        self.endTime = datetime.time.now()
+        print("\n -----------------------------------------------\n End time successfully logged as {self.endTime}")
+       
+    def midnightCheck(self):
+        pass 
     
     def addHowMany(self):
         isEntered = False
@@ -232,7 +250,7 @@ if __name__ == "__main__":
     instance.addActivityCode()
     instance.addHowMany()
     instance.addNote()
-    instance.addStartTime()
+    instance.addTime()
     instance.addEndTime()
     instance.addDate()
     instance.appendToDf()

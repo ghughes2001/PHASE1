@@ -11,13 +11,13 @@ class openAppend:
         self.firstName = ""
         self.classNum = ""
         self.activityCode = ""
-        self.date = 0
+        self.date = ""
         self.pplInvolved = 0
         self.notes = ""
         self.startingRow = 0
         self.startTime = 0
         self.endTime = 0
-        doesSpanMidnight = False
+        self.doesSpanMidnight = False
         
         
     def getDataFrame(self):
@@ -193,12 +193,6 @@ class openAppend:
             self.df = self.df._append(afterMidnight, ignore_index=True)
             print(f"Dataframe after appending:\n {self.df}\n")
             
-            
-            
-            
-
-            
-       
     def addTime(self):
         hasUserFinished = False
         startingTime = datetime.now().time()
@@ -273,8 +267,6 @@ class openAppend:
         print("-------------------------------------------------------------------------------------------------------------------------------\n")
         print(f"CSV created with {self.lastName,self.firstName} and is in the directory of the program.\n It is called {fileName} and is located at {os.getcwd()}. \n Thank you for using our csv setup tool :)")
         print("\n-------------------------------------------------------------------------------------------------------------------------------" )           
-
-    
 
 
 if __name__ == "__main__":

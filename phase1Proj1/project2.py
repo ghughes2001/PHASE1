@@ -17,6 +17,7 @@ class openAppend:
         self.startingRow = 0
         self.startTime = 0
         self.endTime = 0
+        doesSpanMidnight = False
         
         
     def getDataFrame(self):
@@ -29,10 +30,10 @@ class openAppend:
                 validFile.append(file)
         if count > 1:
             print("several files contain Log.csv, exiting.....")
-            exit
+            exit()
         elif count <1 :
             print("No file containing Log.csv found, exiting......")
-            exit
+            exit()
         else:
             print("Loading CSV.....")
             self.fileName = validFile[0]
@@ -167,6 +168,36 @@ class openAppend:
     
     def fixTimesUp(time):
         return time.strftime("%H:%M")
+    
+    def spanMidnight(self):
+        if self.endTime < self.startTime:
+            self.doesSpanMidnight = True
+            beforeMidnight = {
+                0: self.date,
+                1: self.startTime,
+                2: "23:59",
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            self.df = self.df._append(beforeMidnight, ignore_index=True)
+            print(f"Dataframe after appending:\n {self.df}\n")
+            afterMidnight = {
+                0: self.date,
+                1: "00:00",
+                2: self.endTime,
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            self.df = self.df._append(afterMidnight, ignore_index=True)
+            print(f"Dataframe after appending:\n {self.df}\n")
+            
+            
+            
+            
+
+            
        
     def addTime(self):
         hasUserFinished = False
@@ -190,8 +221,7 @@ class openAppend:
         self.endTime = startingTime = openAppend.fixTimesUp(self.endTime)
         print(f"\n -----------------------------------------------\n End time successfully logged as {self.endTime}")
        
-    def midnightCheck(self):
-        pass 
+
     
     def addHowMany(self):
         isEntered = False
@@ -212,18 +242,19 @@ class openAppend:
         
     def appendToDf(self):
         print(f"Data Frame Before Appending: \n {self.df}\n")
+        self.spanMidnight()
+        if self.doesSpanMidnight == False:
+            new_row = {
+                0: self.date,
+                1: self.startTime,
+                2: self.endTime,
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            self.df = self.df._append(new_row, ignore_index=True)
         
-        new_row = {
-            0: self.date,
-            1: self.startTime,
-            2: self.endTime,
-            3: self.pplInvolved,
-            4: self.activityCode,
-            5: self.notes
-        }
-        self.df = self.df._append(new_row, ignore_index=True)
-        
-        print(f"Dataframe after appending:\n {self.df}\n")
+            print(f"Dataframe after appending:\n {self.df}\n")
         
         
     def populateDataFrame(self):

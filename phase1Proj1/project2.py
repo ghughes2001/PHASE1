@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import re
 from datetime import datetime
+#this one is for testing the midnight requirement
+from datetime import time
 class openAppend:
     informMessage = "salkdfjkaldskfj;laksdjflk;asdjf;lkasjdf;lkajsdfl;kjdsfal;kasdjf;lkajsdfl;kj"
     def __init__(self):
@@ -196,6 +198,8 @@ class openAppend:
     def addTime(self):
         hasUserFinished = False
         startingTime = datetime.now().time()
+        #uncomment this to test midnight requirement
+        #startingTime= time(23,50)
         startingTime = openAppend.fixTimesUp(startingTime)
         while(hasUserFinished==False):
             userInput = input(f"\n-----------------------------------------------\nCurrent start time for log is {startingTime}\n Please press enter to finish activity.")
@@ -211,6 +215,8 @@ class openAppend:
                 print("User input is unrecognized.")
             
     def addEndTime(self):
+        #uncomment this to log midnight requirement
+        #self.endTime = time(0,39)
         self.endTime = datetime.now().time()
         self.endTime = startingTime = openAppend.fixTimesUp(self.endTime)
         print(f"\n -----------------------------------------------\n End time successfully logged as {self.endTime}")

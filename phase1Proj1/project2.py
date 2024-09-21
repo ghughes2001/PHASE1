@@ -25,11 +25,13 @@ class openAppend:
     def getDataFrame(self):
         validFile = []
         regPat = r'^[A-Z][a-z]+[A-Z][a-z]+Log\.csv$'
+        #regPat = r'^[A-Z][a-z]+Log\.csv$'
         count=0
         for file in os.listdir():
             if re.match(regPat,file):
                 count +=1
                 validFile.append(file)
+                
         if count > 1:
             print("several files contain Log.csv, exiting.....")
             exit()
@@ -39,8 +41,11 @@ class openAppend:
         else:
             print("Loading CSV.....")
             self.fileName = validFile[0]
-            
-            self.df = pd.read_csv(self.fileName, header=None)
+            try:
+                self.df = pd.read_csv(self.fileName, header=None)
+            except:
+                print("No data in csv")
+                exit()
     #this function is the data check he talks about, dataframe will return NaN if an elelemnt does not exist, so we check wtih that   
     def dataCheck(self):
         #edge case, checking shape
@@ -182,6 +187,7 @@ class openAppend:
                 4: self.activityCode,
                 5: self.notes
             }
+            
             self.df = self.df._append(beforeMidnight, ignore_index=True)
             print(f"Dataframe after appending:\n {self.df}\n")
             afterMidnight = {
@@ -231,7 +237,7 @@ class openAppend:
             try:
                 num = int(self.pplInvolved)
                 if 0 < num <= 50:
-                    self.pplInvolved = num
+                    self.pplInvolved = int(num)
                     isEntered = True
                     print(f"\nYou entered: {self.pplInvolved} for people involved\n")
                 else:
@@ -266,7 +272,12 @@ class openAppend:
         
     def saveDf(self):
         #It is necessary to remove NaNs before saving for formating
-        self.df = self.df.fillna("")
+        #converts the how many people to ints
+        #data cleaning
+        self.df = self.df.fillna("")  
+        self.df[3] = pd.to_numeric(self.df[3])
+        self.df[3] = self.df[3].fillna(0).astype(int)
+        
         print(self.df)
         fileName = f"{self.lastName}{self.firstName}Log.csv"
         self.df.to_csv(fileName,index=False,header=False)

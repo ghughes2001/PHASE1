@@ -1,3 +1,36 @@
+"""
+    Language: Python 3
+    IDE: VS Code
+    HOW TO RUN: Navigate to where the python project and execute as python {projectname}.py, because python is an interpreted language, an external library is used to "compile" it for an executable.
+    Testing was ran with the python command.
+    AUTHORS: Rohan Keenoy 
+    DATE: 9/21/2024
+    DATA STRUCTURES: A pandas dataframe is commonly used in scientific applications, it can be thought of as a N-d array,can have headers, and is structured as the csv is structured. 
+    For this project using a dataframe is a no brainer. R has a similar structure. 
+    A dictionary is used to append to rows in a dataframe. This generated per row-entry. 
+    EXTERNAL files: Only the log file generated from program A is used.
+    External preperation: Because python is an interpreted language a software _____ will be used to generate an executable. 
+    
+    References are the same as project 2 :
+    0.)Regex testing on : https://regex101.com/
+    Pandas references for converting a column of a dataframe to int from float because of NaN problems (headers are good for any data because of these things):
+    1.)https://stackoverflow.com/questions/21287624/convert-pandas-column-containing-nans-to-dtype-int?page=2&tab=scoredesc
+    
+    Date time help: 
+    Create a time object (used for midnight testing):
+    2.) https://stackoverflow.com/questions/12291209/how-to-initialize-time-object-in-python
+    
+    time conversion for strftime():
+    3.) https://www.programiz.com/python-programming/datetime/strftime
+    
+    added references for time handling (since we didn't think we needed it before):
+    4.) https://www.tutorialspoint.com/how-to-find-if-24-hrs-have-passed-between-datetimes-in-python#:~:text=To%20find%20out%20if%2024,and%20use%20if%20for%20comparision.
+    5.) https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
+"""
+
+
+
+
 import pandas as pd
 import os
 import re
@@ -6,7 +39,7 @@ from datetime import datetime
 from datetime import time
 
 class prog3():
-    informMessage = "blah blah blah project C"
+    informMessage = "--------------------------------------------\n Welcome to Software C! \n The objective of this software is to read in a csv file, parse it.\n It allows you to add a new entry with an activity code, people involved, and lets users manually enter their time log, while maintaing project requirements and edge cases. It allows for multiple entries\n  --------------------------------------------"
     def __init__(self):
         self.df = pd.DataFrame()
         self.fileName = ""
@@ -22,9 +55,11 @@ class prog3():
         self.doesSpanMidnight = False
         self.Date1 = 0
         self.Date2 = 0
-        
-        
-        
+    #prints start of program
+    def displayStartOfProgram(self):
+        print(self.informMessage)
+        input("\n.....Press Enter to Continue....\n")   
+    #gets starting row from csv for data checking
     def getStartingRow(self):
         self.startingRow = self.df.shape[0]
         self.startingRow+= 1
@@ -75,7 +110,7 @@ class prog3():
             self.firstName = self.df.iloc[0,1]
             self.classNum = self.df.iloc[1,0]
             self.printNames()
-    #took from my project B   
+    #took from my project B  , add how many ppl invovled
     def addHowMany(self):
         isEntered = False
         while(isEntered == False):
@@ -91,7 +126,7 @@ class prog3():
                     print("The number must be between 1 and 50. Please try again.")
             except ValueError:
                 print("Invalid input. Please enter a positive integer.")
-    
+    #prints the name and file information of what was found
     def printNames(self):
         isUsersFile = False
         while(isUsersFile==False):
@@ -103,7 +138,7 @@ class prog3():
                 exit()
             else:
                 print("User input not reconized, please try again!")
-    
+    #display for activities, took from my project B
     def display(self):
         print("--------------------------------------------ACTIVITY CODES--------------------------------------------")
         print("0 --> Reading Canvas site or textbook\n")
@@ -120,7 +155,7 @@ class prog3():
         print("B --> Working on a mini-lecture video or reading\n")
         print("C --> Viewing a video or website that is not a mini-lecture\n")
         print("D --> Other If you are doing something that does not fit any of the other categories (explain in notes)\n")
-        
+    # activity code logic, took from my project B
     def addActivityCode(self):
         isEntered = False
         while not isEntered:
@@ -137,7 +172,7 @@ class prog3():
                     print("Selected 2: Taking a scoring quiz")
                     isEntered = True
                 case "3":
-                    print("Syelected 3: Participating in a Canvas discussion")
+                    print("Selected 3: Participating in a Canvas discussion")
                     isEntered = True
                 case "4":
                     print("Selected 4: Meeting with your team")
@@ -172,7 +207,7 @@ class prog3():
                 case _:
                     print("!!!!-----Please enter a valid code.-----!!!!")
                     
-    #this code adds the note to a class variable while forcing user to enter a note if D(other) is selected of at least one char      
+    #this code adds the note to a class variable while forcing user to enter a note if D(other) is selected of at least one char. From my project B
     def addNote(self):
         isEntered = False
         if self.activityCode == "D":
@@ -198,10 +233,11 @@ class prog3():
                         print("!!!!--------------------------------------------Comma in notes, please try again!")
                 else:
                     print("!!!!--------------------------------------------Len is over 80 chars, please try again!")
+    #was going to use this but didnt
     def fixTimesUp(time):
         #refernece #3
         return time.strftime("%H:%M")
-        
+    #different appending for midnight, from project B
     def spanMidnight(self):
         if self.endTime < self.startTime:
             self.doesSpanMidnight = True
@@ -227,6 +263,7 @@ class prog3():
             self.df = self.df._append(afterMidnight, ignore_index=True)
             #print(f"Dataframe after appending:\n {self.df}\n")
     #https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
+    #checks user input for time and will assign actual time vars
     def userTimeCheck(self,time,endStart):
         if endStart == "start":
             try:
@@ -242,7 +279,7 @@ class prog3():
                 print("Unable to parse that time, try again")
         else:
             print("Unable to parse that time, try again")
-    
+    #starts the time inputs, gets datetime, took from my project B
     def addStartTime(self):
         hasUserFinished = False
         #startingTime = datetime.now().time()
@@ -251,7 +288,7 @@ class prog3():
         #startingTime= time(23,50)
         #startingTime = openAppend.fixTimesUp(startingTime)
         while(hasUserFinished==False):
-            #https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
+            #https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime reference 5
             userInput = input(f"\n--------------------------------------------\nPlease enter a STARTING time for the activity {self.activityCode} \n Use datetime format: MM/dd/yyyy HH:mm \n")
             formatCorrect = self.userTimeCheck(userInput,"start")
             if formatCorrect:
@@ -260,7 +297,7 @@ class prog3():
                 self.getEndTime()
             else:
                 print("input could not be processed, try again!")
-    
+    #continued from addStartTime, added some logic and function calls for multiple date handling. INSPIRED from project B
     def getEndTime(self):
         hasUserFinished = False
         #startingTime = datetime.now().time()
@@ -279,30 +316,7 @@ class prog3():
             else:
                 print("input could not be processed, try again!")
                 
-    def spanMidnight(self):
-        if self.endTime < self.startTime or self.Date1 != self.Date2:
-            self.doesSpanMidnight = True
-            beforeMidnight = {
-                0: self.Date1,
-                1: self.startTime,
-                2: "23:59",
-                3: self.pplInvolved,
-                4: self.activityCode,
-                5: self.notes
-            }
-            
-            self.df = self.df._append(beforeMidnight, ignore_index=True)
-            #print(f"Dataframe after appending:\n {self.df}\n")
-            afterMidnight = {
-                0: self.Date2,
-                1: "00:00",
-                2: self.endTime,
-                3: self.pplInvolved,
-                4: self.activityCode,
-                5: self.notes
-            }
-            self.df = self.df._append(afterMidnight, ignore_index=True)
-            #print(f"The added row in the csv is {self.df.tail(1)}")
+    
     #time conversions for midnight check
     def getTimesGetDates(self):
         try:
@@ -313,6 +327,7 @@ class prog3():
         except:
             #print("Problem parsing times")
             pass
+    #case when it isn't midnight, from project B
     def appendToDf(self):
         #print(f"Data Frame Before Appending: \n {self.df}\n")
         self.spanMidnight()
@@ -326,12 +341,12 @@ class prog3():
                 5: self.notes
             }
             self.df = self.df._append(new_row, ignore_index=True)
-    
+    #time validation for project C requirements
     def timeInputValidation(self):
         #print("in time input validation")
         areYouSure = False
         #case for testing 24 hours
-        #https://www.tutorialspoint.com/how-to-find-if-24-hrs-have-passed-between-datetimes-in-python#:~:text=To%20find%20out%20if%2024,and%20use%20if%20for%20comparision.
+        #https://www.tutorialspoint.com/how-to-find-if-24-hrs-have-passed-between-datetimes-in-python#:~:text=To%20find%20out%20if%2024,and%20use%20if%20for%20comparision. reference 4
         if (self.endTime - self.startTime).total_seconds() > 86400:
             print("That exceeds 24 hours, get some sleep! Or try to input again!")
             self.addStartTime()
@@ -355,7 +370,7 @@ class prog3():
         self.appendToDf()
         self.saveDf()
                     
-        
+    #actually saves the new rows
     def saveDf(self):
         #It is necessary to remove NaNs before saving for formating
         #converts the how many people to ints
@@ -374,10 +389,10 @@ class prog3():
         self.fileName = f"{self.lastName}{self.firstName}Log.csv"
         self.df.to_csv(self.fileName,index=False,header=False)
         print("--------------------------------------------\n")
-        print(f"An activity for activity # {self.activityCode} was logged with a start time of {self.startTime}, end time of {self.endTime} on starting date {self.Date1} and ending date {self.Date2} that had {self.pplInvolved} people involved")
+        print(f"A record for activity # {self.activityCode} was logged with a start time of {self.startTime}, end time of {self.endTime} on starting date {self.Date1} and ending date {self.Date2} that had {self.pplInvolved} people involved")
         #print(f"CSV appended for {self.lastName,self.firstName} and is in the directory of the program.\n It is called {fileName} and is located at {os.getcwd()}. \n ")
         #print("\n--------------------------------------------" )
-    
+    #sees if we continue making records
     def continueLoop(self,newRows):
         doALoop = False
         while doALoop == False:
@@ -390,22 +405,25 @@ class prog3():
                 return False, newRows
             else:
                 print("Did not reconize user option. Try again!")
-        
+    #class driver, changed it up since we needed to possibly add more than one record   
     def driver(self):
         doALoop = True
         newRows = 0
+        self.displayStartOfProgram()
         self.getDataFrame()
+        self.getStartingRow()
+        self.dataCheck()
         while doALoop:
-            self.dataCheck()
-            self.getStartingRow()
             self.addActivityCode()
             self.addHowMany()
             self.addNote()
             self.addStartTime()
+            if self.doesSpanMidnight == True:
+                newRows+=1
             doALoop, newRows = self.continueLoop(newRows)
+            self.doesSpanMidnight = False
         print("\n--------------------------------------------" )
-        if self.doesSpanMidnight == True:
-            newRows+=1
+        #print("how many new rows? ",newRows)
         print(f"The added row(s) in the csv is \n{self.df.tail(newRows)}")
         print(f"CSV appended for {self.lastName,self.firstName} and is in the directory of the program.\n It is called {self.fileName} and is located at {os.getcwd()}. \n ")
         print("\n--------------------------------------------" )
@@ -414,7 +432,7 @@ class prog3():
         
         
         
-#driver code
+#getting started with the class
 if __name__ == "__main__":
     instance3 = prog3()
     instance3.driver()

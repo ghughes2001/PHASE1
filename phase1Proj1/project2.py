@@ -235,7 +235,7 @@ class openAppend:
                 5: self.notes
             }
             self.df = self.df._append(afterMidnight, ignore_index=True)
-            print(f"Dataframe after appending:\n {self.df}\n")
+            print(f"The added row in the csv is {self.df.tail(1)}")
     #this is the main time function        
     def addTime(self):
         hasUserFinished = False
@@ -289,7 +289,7 @@ class openAppend:
         #print(f"Data Frame Before Appending: \n {self.df}\n")
         self.spanMidnight()
         if self.doesSpanMidnight == False:
-            new_row = {
+            newRow = {
                 0: self.date,
                 1: self.startTime,
                 2: self.endTime,
@@ -297,9 +297,9 @@ class openAppend:
                 4: self.activityCode,
                 5: self.notes
             }
-            self.df = self.df._append(new_row, ignore_index=True)
+            self.df = self.df._append(newRow, ignore_index=True)
         
-            #print(f"Dataframe after appending:\n {self.df}\n")
+            #print(f"Dataframe after appending new row:\n {self.df.tail(1)}\n")
         
         
     def populateDataFrame(self):
@@ -312,7 +312,7 @@ class openAppend:
     def saveDf(self):
         #It is necessary to remove NaNs before saving for formating
         #converts the how many people to ints
-        #data cleaning
+        #data cleaning if its needed
         try:
             self.df = self.df.fillna("")  
             #reference 1
@@ -320,15 +320,16 @@ class openAppend:
             self.df[3] = self.df[3].fillna(0).astype(int)
             self.df.loc[0:1, 3] = self.df.loc[0:1, 3].replace(0, "",errors = "ignore")
         except Exception:
-            print("couldn't clean data") 
+            pass
         
-        print(self.df)
+        print(f"The added row in the csv is: \n {self.df.tail(1)}")
         fileName = f"{self.lastName}{self.firstName}Log.csv"
         self.df.to_csv(fileName,index=False,header=False)
         print("--------------------------------------------\n")
         print(f"An activity for activity # {self.activityCode} was logged with a start time of {self.startTime}, end time of {self.endTime} and had {self.pplInvolved} involved")
         print(f"CSV appended for {self.lastName,self.firstName} and is in the directory of the program.\n It is called {fileName} and is located at {os.getcwd()}. \n Thank you for using our csv setup tool :)")
-        print("\n--------------------------------------------" )           
+        print("\n--------------------------------------------" )
+               
 
 #driver code
 if __name__ == "__main__":

@@ -1,6 +1,9 @@
 import pandas as pd
 import os
 import re
+from datetime import datetime
+#this one is for testing the midnight requirement
+from datetime import time
 
 class prog3():
     informMessage = "blah blah blah project C"
@@ -16,6 +19,9 @@ class prog3():
         self.pplInvolved = 0
         self.notes = ""
         self.startingRow = 0
+        self.doesSpanMidnight = False
+        self.Date1 = 0
+        self.Date2 = 0
         
         
         
@@ -69,6 +75,22 @@ class prog3():
             self.firstName = self.df.iloc[0,1]
             self.classNum = self.df.iloc[1,0]
             self.printNames()
+    #took from my project B   
+    def addHowMany(self):
+        isEntered = False
+        while(isEntered == False):
+            print("--------------------------------------------")
+            self.pplInvolved = input("\n How many people were involved in the activity? Select a positive integer <= 50: \n--------------------------------------------\n")
+            try:
+                num = int(self.pplInvolved)
+                if 0 < num <= 50:
+                    self.pplInvolved = int(num)
+                    isEntered = True
+                    print(f"\nYou entered: {self.pplInvolved} for people involved\n")
+                else:
+                    print("The number must be between 1 and 50. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter a positive integer.")
     
     def printNames(self):
         isUsersFile = False
@@ -76,9 +98,11 @@ class prog3():
             selection = input(f"Continue with file found in directory with First name: {self.firstName} Last Name: {self.lastName} and class ID: {self.classNum}? If yes, type Y,y,Yes, yes and press enter. If no, type N,n, No and press enter.\n")
             if selection == "Yes" or selection == "Y" or selection == "yes" or selection == "y":
                 isUsersFile = True
-            else:
+            elif selection == "No" or selection == "N" or selection == "n":
                 print("--------------------------------------------Since this is not your file, program is exiting.--------------------------------------------")
                 exit()
+            else:
+                print("User input not reconized, please try again!")
     
     def display(self):
         print("--------------------------------------------ACTIVITY CODES--------------------------------------------")
@@ -147,9 +171,245 @@ class prog3():
                     isEntered = True
                 case _:
                     print("!!!!-----Please enter a valid code.-----!!!!")
+                    
+    #this code adds the note to a class variable while forcing user to enter a note if D(other) is selected of at least one char      
+    def addNote(self):
+        isEntered = False
+        if self.activityCode == "D":
+            while isEntered == False:
+                self.notes = input("\n--------------------------------------------\nYou entered other as an activity, please enter a note less than 80 chars\n--------------------------------------------\n")
+                #cannot be an empty null string and must be less than 80 chars
+                if len(self.notes) < 80 and len(self.notes) != 0:
+                    if "," not in self.notes:
+                        isEntered = True
+                        print(f"\n--------------------------------------------\nNote input: {self.notes} accepted.")
+                    else:
+                        print("!!!!--------------------------------------------Comma found in notes, please try again!")
+                else:
+                    print("!!!!--------------------------------------------Notes bound exceeded > 80 or entered a null string.. Please enter a valid note.  User must enter a note for an other activity selection.")
+        else:
+            while isEntered == False:
+                self.notes = input("\n--------------------------------------------\nUser selected something different than other.\n This means it is optional to include a notes portion\nPlease Enter a note less than 80 chars or just click enter.\n--------------------------------------------\n")
+                if len(self.notes) < 80:
+                    if "," not in self.notes:
+                        isEntered = True
+                        print(f"Note input{self.notes} accepted.")
+                    else:
+                        print("!!!!--------------------------------------------Comma in notes, please try again!")
+                else:
+                    print("!!!!--------------------------------------------Len is over 80 chars, please try again!")
+    def fixTimesUp(time):
+        #refernece #3
+        return time.strftime("%H:%M")
         
+    def spanMidnight(self):
+        if self.endTime < self.startTime:
+            self.doesSpanMidnight = True
+            beforeMidnight = {
+                0: self.date,
+                1: self.startTime,
+                2: "23:59",
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            
+            self.df = self.df._append(beforeMidnight, ignore_index=True)
+            #print(f"Dataframe after appending:\n {self.df}\n")
+            afterMidnight = {
+                0: self.date,
+                1: "00:00",
+                2: self.endTime,
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            self.df = self.df._append(afterMidnight, ignore_index=True)
+            #print(f"Dataframe after appending:\n {self.df}\n")
+    #https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
+    def userTimeCheck(self,time,endStart):
+        if endStart == "start":
+            try:
+                self.startTime = datetime.strptime(time,"%m/%d/%Y %H:%M")
+                return True
+            except:
+                print("Unable to parse that time, try again")
+        elif endStart =="end":
+            try:
+                self.endTime = datetime.strptime(time,"%m/%d/%Y %H:%M")
+                return True
+            except:
+                print("Unable to parse that time, try again")
+        else:
+            print("Unable to parse that time, try again")
+    
+    def addStartTime(self):
+        hasUserFinished = False
+        #startingTime = datetime.now().time()
+        #uncomment this to test midnight requirement
+        #reference 2
+        #startingTime= time(23,50)
+        #startingTime = openAppend.fixTimesUp(startingTime)
+        while(hasUserFinished==False):
+            #https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
+            userInput = input(f"\n--------------------------------------------\nPlease enter a STARTING time for the activity {self.activityCode} \n Use datetime format: MM/dd/yyyy HH:mm \n")
+            formatCorrect = self.userTimeCheck(userInput,"start")
+            if formatCorrect:
+                hasUserFinished = True
+                print(f"Date time {self.startTime} has been accepted.")
+                self.getEndTime()
+            else:
+                print("input could not be processed, try again!")
+    
+    def getEndTime(self):
+        hasUserFinished = False
+        #startingTime = datetime.now().time()
+        #uncomment this to test midnight requirement
+        #reference 2
+        #startingTime= time(23,50)
+        #startingTime = openAppend.fixTimesUp(startingTime)
+        while(hasUserFinished==False):
+            #https://www.digitalocean.com/community/tutorials/python-string-to-datetime-strptime
+            userInput = input(f"\n--------------------------------------------\nPlease enter a ENDING time for the activity {self.activityCode} \n Use datetime format: MM/dd/yyyy HH:mm \n")
+            formatCorrect = self.userTimeCheck(userInput,"end")
+            if formatCorrect:
+                hasUserFinished = True
+                print(f"Date time {self.endTime} has been accepted.")
+                self.timeInputValidation()
+            else:
+                print("input could not be processed, try again!")
+                
+    def spanMidnight(self):
+        if self.endTime < self.startTime or self.Date1 != self.Date2:
+            self.doesSpanMidnight = True
+            beforeMidnight = {
+                0: self.Date1,
+                1: self.startTime,
+                2: "23:59",
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            
+            self.df = self.df._append(beforeMidnight, ignore_index=True)
+            #print(f"Dataframe after appending:\n {self.df}\n")
+            afterMidnight = {
+                0: self.Date2,
+                1: "00:00",
+                2: self.endTime,
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            self.df = self.df._append(afterMidnight, ignore_index=True)
+            #print(f"The added row in the csv is {self.df.tail(1)}")
+    #time conversions for midnight check
+    def getTimesGetDates(self):
+        try:
+            self.Date1 = self.startTime.strftime("%m/%d/%Y")
+            self.Date2 = self.endTime.strftime("%m/%d/%Y")
+            self.startTime = self.startTime.strftime("%H:%M")
+            self.endTime = self.endTime.strftime("%H:%M")
+        except:
+            #print("Problem parsing times")
+            pass
+    def appendToDf(self):
+        #print(f"Data Frame Before Appending: \n {self.df}\n")
+        self.spanMidnight()
+        if self.doesSpanMidnight == False:
+            new_row = {
+                0: self.Date1,
+                1: self.startTime,
+                2: self.endTime,
+                3: self.pplInvolved,
+                4: self.activityCode,
+                5: self.notes
+            }
+            self.df = self.df._append(new_row, ignore_index=True)
+    
+    def timeInputValidation(self):
+        #print("in time input validation")
+        areYouSure = False
+        #case for testing 24 hours
+        #https://www.tutorialspoint.com/how-to-find-if-24-hrs-have-passed-between-datetimes-in-python#:~:text=To%20find%20out%20if%2024,and%20use%20if%20for%20comparision.
+        if (self.endTime - self.startTime).total_seconds() > 86400:
+            print("That exceeds 24 hours, get some sleep! Or try to input again!")
+            self.addStartTime()
+        elif (self.endTime - self.startTime).total_seconds() > 14400:
+            while areYouSure == False:
+                yesOrNo = input(f"Are you sure you have been working for/over 4 hours (240 minutes) on activity code {self.activityCode}? If yes, type Y,y,Yes, yes and press enter. If no, type N,n, No and press enter.\n")
+                if yesOrNo == "Yes" or yesOrNo == "Y" or yesOrNo == "yes" or yesOrNo == "y":
+                    print(f"\nYou are working hard on Activity {self.activityCode}!\n")
+                    areYouSure = True
+                    
+                elif yesOrNo == "No" or yesOrNo == "n" or yesOrNo == "N":
+                    #breaks out of a nested loop, oops it has to go through this code anyways again
+                    areYouSure = True
+                    self.addStartTime()
+                else:
+                    print("Input not reconized, try again!")
+        else:
+            #print("...validating midnight requirements")
+            pass
+        self.getTimesGetDates()
+        self.appendToDf()
+        self.saveDf()
+                    
         
+    def saveDf(self):
+        #It is necessary to remove NaNs before saving for formating
+        #converts the how many people to ints
+        #data cleaning
+        try:
+            self.df = self.df.fillna("")  
+            #reference 1
+            self.df[3] = pd.to_numeric(self.df[3], errors='coerce')  
+            self.df[3] = self.df[3].fillna(0).astype(int)
+            self.df.loc[0:1, 3] = self.df.loc[0:1, 3].replace(0, "",errors = "ignore")
+        except Exception:
+            #print("couldn't clean data") 
+            pass
         
+        #print(f"The added row in the csv is {self.df.tail(1)}")
+        self.fileName = f"{self.lastName}{self.firstName}Log.csv"
+        self.df.to_csv(self.fileName,index=False,header=False)
+        print("--------------------------------------------\n")
+        print(f"An activity for activity # {self.activityCode} was logged with a start time of {self.startTime}, end time of {self.endTime} on starting date {self.Date1} and ending date {self.Date2} that had {self.pplInvolved} people involved")
+        #print(f"CSV appended for {self.lastName,self.firstName} and is in the directory of the program.\n It is called {fileName} and is located at {os.getcwd()}. \n ")
+        #print("\n--------------------------------------------" )
+    
+    def continueLoop(self,newRows):
+        doALoop = False
+        while doALoop == False:
+            userOption = input("Would you like to continue and manually enter another entry? If yes, type Y,y,Yes, yes and press enter. If no, type N,n, No and press enter.\n")
+            if userOption == "Yes" or userOption == "Y" or userOption == "yes" or userOption == "y":
+                newRows+=1
+                return True, newRows
+            elif userOption == "No" or userOption == "N" or userOption == "n":
+                newRows+=1
+                return False, newRows
+            else:
+                print("Did not reconize user option. Try again!")
+        
+    def driver(self):
+        doALoop = True
+        newRows = 0
+        self.getDataFrame()
+        while doALoop:
+            self.dataCheck()
+            self.getStartingRow()
+            self.addActivityCode()
+            self.addHowMany()
+            self.addNote()
+            self.addStartTime()
+            doALoop, newRows = self.continueLoop(newRows)
+        print("\n--------------------------------------------" )
+        if self.doesSpanMidnight == True:
+            newRows+=1
+        print(f"The added row(s) in the csv is \n{self.df.tail(newRows)}")
+        print(f"CSV appended for {self.lastName,self.firstName} and is in the directory of the program.\n It is called {self.fileName} and is located at {os.getcwd()}. \n ")
+        print("\n--------------------------------------------" )
+            
         
         
         
@@ -157,8 +417,6 @@ class prog3():
 #driver code
 if __name__ == "__main__":
     instance3 = prog3()
-    instance3.getDataFrame()
-    instance3.dataCheck()
-    instance3.addActivityCode()
+    instance3.driver()
     
     

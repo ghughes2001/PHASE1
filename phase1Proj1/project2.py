@@ -24,7 +24,7 @@
     3.) https://www.programiz.com/python-programming/datetime/strftime
 """
 
-
+import warnings
 import pandas as pd
 import os
 import re
@@ -328,14 +328,17 @@ class openAppend:
         #It is necessary to remove NaNs before saving for formating
         #converts the how many people to ints
         #data cleaning if its needed
+        #was getting a future warning for a data type issue since floats in a cloumn were not allowed
+            #this might be a problem on newer pandas
+        warnings.simplefilter(action="ignore",category=FutureWarning)
         try:
             self.df = self.df.fillna("")  
             #reference 1
-            self.df[3] = pd.to_numeric(self.df[3], errors='coerce')  
+            self.df[3] = pd.to_numeric(self.df[3])  
             self.df[3] = self.df[3].fillna(0).astype(int)
-            self.df.loc[0:1, 3] = self.df.loc[0:1, 3].replace(0, "",errors = "ignore")
+            self.df.loc[0:1, 3] = self.df.loc[0:1, 3].replace(0, "")
         except Exception:
-            pass
+            print("Cant clean")
         
         print(f"The added row in the csv is: \n {self.df.tail(1)}")
         fileName = f"{self.lastName}{self.firstName}Log.csv"
@@ -353,7 +356,7 @@ if __name__ == "__main__":
     instance.getDataFrame()
     instance.getStartingRow()
     instance.dataCheck()
-    instance.printDf()
+    #instance.printDf()
     instance.addActivityCode()
     instance.addHowMany()
     instance.addNote()

@@ -6,7 +6,7 @@
     AUTHORS: Rohan Keenoy 
     DATE: 9/21/2024
     DATA STRUCTURES: A pandas dataframe is commonly used in scientific applications, it can be thought of as a N-d array,can have headers, and is structured as the csv is structured. 
-    For this project using a dataframe is a no brainer. R has a similar structure. 
+    For this project using a dataframe is a no brainer. R has a similar structure. Note: the output rows will show numbers where headers usually are - this does not mean we are saving with headers.
     A dictionary is used to append to rows in a dataframe. This generated per row-entry. 
     EXTERNAL files: Only the log file generated from program A is used.
     External preperation: Because python is an interpreted language a software _____ will be used to generate an executable. 
@@ -30,7 +30,7 @@
 
 
 
-
+import warnings
 import pandas as pd
 import os
 import re
@@ -242,7 +242,7 @@ class prog3():
         if self.endTime < self.startTime:
             self.doesSpanMidnight = True
             beforeMidnight = {
-                0: self.date,
+                0: self.Date1,
                 1: self.startTime,
                 2: "23:59",
                 3: self.pplInvolved,
@@ -253,7 +253,7 @@ class prog3():
             self.df = self.df._append(beforeMidnight, ignore_index=True)
             #print(f"Dataframe after appending:\n {self.df}\n")
             afterMidnight = {
-                0: self.date,
+                0: self.Date2,
                 1: "00:00",
                 2: self.endTime,
                 3: self.pplInvolved,
@@ -376,11 +376,16 @@ class prog3():
         #converts the how many people to ints
         #data cleaning
         try:
+            #was getting a future warning for a data type issue since floats in a cloumn were not allowed
+            #this might be a problem on newer pandas
+            warnings.simplefilter(action="ignore",category=FutureWarning)
+            #remove nans
             self.df = self.df.fillna("")  
             #reference 1
-            self.df[3] = pd.to_numeric(self.df[3], errors='coerce')  
+            #make this column numeric and not float
+            self.df[3] = pd.to_numeric(self.df[3])  
             self.df[3] = self.df[3].fillna(0).astype(int)
-            self.df.loc[0:1, 3] = self.df.loc[0:1, 3].replace(0, "",errors = "ignore")
+            self.df.loc[0:1, 3] = self.df.loc[0:1, 3].replace(0, "")
         except Exception:
             #print("couldn't clean data") 
             pass

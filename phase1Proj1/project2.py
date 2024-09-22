@@ -41,7 +41,8 @@ class openAppend:
         self.firstName = ""
         self.classNum = ""
         self.activityCode = ""
-        self.date = ""
+        self.Date1 = ""
+        self.Date2=""
         self.pplInvolved = 0
         self.notes = ""
         self.startingRow = 0
@@ -208,15 +209,25 @@ class openAppend:
                     print("!!!!--------------------------------------------Len is over 80 chars, please try again!")
                     
     #converts time to proper the format
-    def fixTimesUp(time):
+    def fixTimesUp(self,time,whichTime):
         #refernece #3
-        return time.strftime("%H:%M")
+        #return time.strftime("%H:%M")
+        #make an actual datetime object since it was converted to a string for showing the customer the normal time show out
+        actualTime = datetime.strptime(time, "%m/%d/%Y %H:%M")
+        if whichTime == "startTime":
+            self.startTime = actualTime.time()
+            self.Date1 = actualTime.date()
+        elif whichTime == "endTime":
+            self.endTime = actualTime.time()
+            self.Date2 = actualTime.date()
+        else:
+            print("time and date was not parsed correctly")
     #this is the appending to dataframe if it is midnight
     def spanMidnight(self):
         if self.endTime < self.startTime:
             self.doesSpanMidnight = True
             beforeMidnight = {
-                0: self.date,
+                0: self.Date1,
                 1: self.startTime,
                 2: "23:59",
                 3: self.pplInvolved,
@@ -227,7 +238,7 @@ class openAppend:
             self.df = self.df._append(beforeMidnight, ignore_index=True)
             print(f"Dataframe after appending:\n {self.df}\n")
             afterMidnight = {
-                0: self.date,
+                0: self.Date2,
                 1: "00:00",
                 2: self.endTime,
                 3: self.pplInvolved,
@@ -240,17 +251,20 @@ class openAppend:
     def addTime(self):
         hasUserFinished = False
         
-        startingTime = datetime.now().time()
+        startingTime = datetime.now()
+        startingTime = startingTime.strftime("%m/%d/%Y %H:%M")
+        print(f"Starting time{startingTime}")
         #uncomment this to test midnight requirement
         #reference 2
         #startingTime= time(23,50)
-        startingTime = openAppend.fixTimesUp(startingTime)
+        
         while(hasUserFinished==False):
             userInput = input(f"\n--------------------------------------------\nCurrent start time for log is {startingTime}\n Please press enter to finish activity.\n")
             nextUserInput = input(f"Are you finished logging for activity {self.activityCode} that started at {startingTime} If yes please select: Y,y,Yes,yes. If no please select N,n,No,no\n")
             if nextUserInput == "Yes" or nextUserInput == "Y" or nextUserInput =="y" or nextUserInput == "yes":
                 print(f"\n--------------------------------------------\nYes was selected to finish activity that started at {startingTime}\n--------------------------------------------\n")
-                self.startTime= startingTime
+                #assgins class vars for starting time
+                self.fixTimesUp(startingTime, "startTime")
                 self.addEndTime()        
                 hasUserFinished = True
                 print(f"\n -----------------------------------------------\n End time for activity {self.activityCode} successfully logged as {self.endTime}")
@@ -263,10 +277,11 @@ class openAppend:
         #uncomment this to log midnight requirement
         #reference 2
         #self.endTime = time(0,39)
-        self.endTime = datetime.now().time()
-        self.endTime = startingTime = openAppend.fixTimesUp(self.endTime)
+        #assigns class variables for the end time
+        endTime = datetime.now()
+        endTime = endTime.strftime("%m/%d/%Y %H:%M")
+        self.fixTimesUp(endTime, "endTime")
         
-
     #how many people, also does valdiation
     def addHowMany(self):
         isEntered = False
@@ -290,7 +305,7 @@ class openAppend:
         self.spanMidnight()
         if self.doesSpanMidnight == False:
             newRow = {
-                0: self.date,
+                0: self.Date1,
                 1: self.startTime,
                 2: self.endTime,
                 3: self.pplInvolved,

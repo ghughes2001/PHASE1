@@ -2,7 +2,8 @@
     Language: Python 3
     IDE: VS Code
     HOW TO RUN: Navigate to where the python project and execute as python {projectname}.py, because python is an interpreted language, an external library is used to "compile" it for an executable.
-    Testing was ran with the python command.
+    So you can either run the script or click on the executable. It was produced with a library called pyinstaller and ran with this command:
+    python c:\users\rohan\appdata\local\packages\pythonsoftwarefoundation.python.3.12_qbz5n2kfra8p0\localcache\local-packages\python312\site-packages\pyinstaller\ --onefile {project1,2,3}.py
     AUTHORS: Rohan Keenoy 
     DATA STRUCTURES: A pandas dataframe is commonly used in scientific applications, it can be thought of as a N-d array,can have headers, and is structured as the csv is structured. 
     For this project using a dataframe is a no brainer. R has a similar structure. 

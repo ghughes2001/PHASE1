@@ -135,7 +135,7 @@ class prog3():
             selection = input(f"Continue with file found in directory with First name: {self.firstName} Last Name: {self.lastName} and class ID: {self.classNum}? If yes, type Y,y,Yes, yes and press enter. If no, type N,n, No and press enter.\n")
             if selection == "Yes" or selection == "Y" or selection == "yes" or selection == "y":
                 isUsersFile = True
-            elif selection == "No" or selection == "N" or selection == "n":
+            elif selection == "No" or selection == "N" or selection == "n" or selection == "no":
                 print("--------------------------------------------Since this is not your file, program is exiting.--------------------------------------------")
                 exit()
             else:
@@ -359,7 +359,7 @@ class prog3():
                     print(f"\nYou are working hard on Activity {self.activityCode}!\n")
                     areYouSure = True
                     
-                elif yesOrNo == "No" or yesOrNo == "n" or yesOrNo == "N":
+                elif yesOrNo == "No" or yesOrNo == "n" or yesOrNo == "N" or yesOrNo == "no":
                     #breaks out of a nested loop, oops it has to go through this code anyways again
                     areYouSure = True
                     self.addStartTime()
@@ -407,7 +407,7 @@ class prog3():
             if userOption == "Yes" or userOption == "Y" or userOption == "yes" or userOption == "y":
                 newRows+=1
                 return True, newRows
-            elif userOption == "No" or userOption == "N" or userOption == "n":
+            elif userOption == "No" or userOption == "N" or userOption == "n"or userOption == "no":
                 newRows+=1
                 return False, newRows
             else:
